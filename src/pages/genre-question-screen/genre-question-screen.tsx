@@ -1,20 +1,21 @@
 import {Link} from "react-router-dom";
 import {QuestionGenre} from "../../mocks/question";
-import {ChangeEventHandler, useState} from "react";
+import {ChangeEventHandler, MouseEventHandler, useState} from "react";
+import AudioPlayer from "../../components/audio-player/audio-player";
 
 type GenreQuestionScreenProps = {
   question: QuestionGenre,
-  onAnswer: (arg: string)=>void
+  onAnswer: (arg: string) => void
 }
 
 function GenreQuestionScreen({question, onAnswer}: GenreQuestionScreenProps): JSX.Element {
   const [userAnswers, setUserAnswers] = useState([false, false, false, false])
-  const onChange=(index: number)=>{
+  const onChange = (index: number) => {
     setUserAnswers(
-      [...userAnswers.slice(0, index), !userAnswers[index],  ...userAnswers.slice(index+1)]
+      [...userAnswers.slice(0, index), !userAnswers[index], ...userAnswers.slice(index + 1)]
     )
   }
-
+  const [idPlaying, setIdPlaying] = useState(0)
   return (
     <section className="game game--genre">
       <header className="game__header">
@@ -51,12 +52,15 @@ function GenreQuestionScreen({question, onAnswer}: GenreQuestionScreenProps): JS
               key={`${answer.src}-${id}`}
               src={answer.src} id={id}
               checkValue={userAnswers[id]}
-              onChange={()=>onChange(id)}
-            /> ))
+              onChange={() => onChange(id)}
+              idPlaying={idPlaying}
+              setIdPlaying={setIdPlaying}
+            />))
           }
-          <button className="game__submit button" type="submit" onClick={()=> {
+          <button className="game__submit button" type="submit" onClick={() => {
             onAnswer('haha')
-          }}>Ответить</button>
+          }}>Ответить
+          </button>
         </form>
       </section>
     </section>
@@ -67,22 +71,23 @@ type GenreAnswerProps = {
   src: string,
   id: number,
   checkValue: boolean,
-  onChange: ChangeEventHandler<HTMLInputElement>
+  onChange: ChangeEventHandler<HTMLInputElement>,
+  setIdPlaying: (id: number) => void,
+  idPlaying: number
 }
 
-const GenreAnswer = ({src, id, checkValue, onChange}:GenreAnswerProps) => (
+const GenreAnswer = ({src, id, checkValue, onChange, setIdPlaying, idPlaying}: GenreAnswerProps) => (
   <div className="track">
-    <button className="track__button track__button--play" type="button"></button>
-    <div className="track__status">
-      <audio src={src}></audio>
-    </div>
+
+    <AudioPlayer src={src} setIdPlaying={setIdPlaying} idPlaying={idPlaying} id={id}/>
+
     <div className="game__answer">
-      <input checked={checkValue} className="game__input visually-hidden" type="checkbox" name="answer" value={`genre-${id+1}`}
-             id={`answer-${id+1}`} onChange={onChange}/>
+      <input checked={checkValue} className="game__input visually-hidden" type="checkbox" name="answer"
+             value={`genre-${id + 1}`}
+             id={`answer-${id + 1}`} onChange={onChange}/>
       <label className="game__check" htmlFor={`answer-${id + 1}`}>Отметить</label>
     </div>
   </div>
 )
-
 
 export default GenreQuestionScreen
