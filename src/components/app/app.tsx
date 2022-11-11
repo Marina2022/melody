@@ -11,6 +11,7 @@ import {AppRoute, AuthorizationStatus} from "../../const";
 import PrivateRoute from "../private-route/private-route";
 import {questions} from "../../mocks/question";
 import GameScreen from "../../pages/game-screen/game-screen";
+import {Mama} from "./aaa";
 
 function App(): JSX.Element {
   const isAuth = AuthorizationStatus.NoAuth
@@ -19,6 +20,7 @@ function App(): JSX.Element {
       <BrowserRouter>
         <Routes>
           <Route path={AppRoute.Root} element={<WelcomeScreen/>}/>
+          <Route path="/mama" element={<Mama>{(arg: number)=><>Мама зарабатывает {arg} рублей</>}</Mama>}/>
           <Route path={AppRoute.Result} element={
             <PrivateRoute auth={isAuth}>
               <WinScreen/>

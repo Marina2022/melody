@@ -51,12 +51,9 @@ function ArtistQuestionScreen({question, onAnswer}: ArtistQuestionScreenProps): 
         <h2 className="game__title">Кто исполняет эту песню?</h2>
         <div className="game__track">
           <div className="track">
-
               <AudioPlayer src={question.song.src} id={0} idPlaying={idPlaying} setIdPlaying={setIdPlaying}/>
-
           </div>
         </div>
-
         <form className="game__artist">
           {question.answers.map((artist, index) =>
             <Artist
