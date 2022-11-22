@@ -1,26 +1,16 @@
 import {Link} from "react-router-dom";
-import {QuestionArtist} from "../../mocks/question";
-import {ChangeEvent, FormEventHandler, MouseEventHandler, useState} from "react";
+import {ChangeEvent, useState} from "react";
 import AudioPlayer from "../../components/audio-player/audio-player";
+import {QuestionArtist} from "../../types/questions";
+import Mistakes from "../../components/Mistakes";
 
 type ArtistQuestionScreenProps = {
   question: QuestionArtist,
-  onAnswer: (arg: string) => void
+  onAnswer: (question: QuestionArtist, response: string) => void
 }
 
 function ArtistQuestionScreen({question, onAnswer}: ArtistQuestionScreenProps): JSX.Element {
-  const [isPlaying, setIsPlaying] = useState(false)
   const [idPlaying, setIdPlaying] = useState(0)
-
-  const onPlayBtnClick = (id: number) => {
-    if (isPlaying) {  // если уже играет музыка
-      setIsPlaying(idPlaying !== id)  // то если эта музыка соответствует нажимаемому треку - ставим на паузу
-    } else {
-      setIsPlaying(true)  // а если другому треку, то играем музыку
-    }
-    setIdPlaying(id) // и по-любому сетаем текущий id
-  }
-
 
   return (
     <section className="game game--artist">
@@ -40,29 +30,37 @@ function ArtistQuestionScreen({question, onAnswer}: ArtistQuestionScreenProps): 
           />
         </svg>
 
-        <div className="game__mistakes">
-          <div className="wrong"></div>
-          <div className="wrong"></div>
-          <div className="wrong"></div>
-        </div>
+        <Mistakes/>
       </header>
 
       <section className="game__screen">
         <h2 className="game__title">Кто исполняет эту песню?</h2>
         <div className="game__track">
           <div className="track">
-              <AudioPlayer src={question.song.src} id={0} idPlaying={idPlaying} setIdPlaying={setIdPlaying}/>
+            <AudioPlayer src={question.song.src} id={0} idPlaying={idPlaying} setIdPlaying={setIdPlaying}/>
           </div>
         </div>
         <form className="game__artist">
-          {question.answers.map((artist, index) =>
-            <Artist
-              key={`${artist}-${index}`}
-              id={index}
-              artist={artist.artist}
-              picture={artist.picture}
-              onAnswer={onAnswer}
-            />)}
+          {question.answers.map((answer, index) =>(
+            <div className="artist" key={answer.artist}>
+              <input className="artist__input visually-hidden"
+                     type="radio"
+                     name="answer"
+                     value={`artist-${index + 1}`}
+                     id={`answer-${index}`}
+                     onChange={(evt)=> {
+
+                       onAnswer(question, answer.artist)
+                     }}
+              />
+              <label className="artist__name" htmlFor={`answer-${index}`}>
+                <img className="artist__picture" src={answer.picture} alt={answer.artist}/>
+                {answer.artist}
+              </label>
+            </div>))
+          }
+
+
         </form>
       </section>
     </section>
@@ -71,30 +69,11 @@ function ArtistQuestionScreen({question, onAnswer}: ArtistQuestionScreenProps): 
 
 type ArtistAnswerProps = {
   id: number,
-  picture: string,
-  artist: string,
-  onAnswer: (arg: string) => void
+  answer: any,
+  onAnswer: (question: QuestionArtist, response: string) => void,
+  question: QuestionArtist
 }
 
-const Artist = ({id, picture, artist, onAnswer}: ArtistAnswerProps) => {
-  return (
-    <div className="artist">
-      <input className="artist__input visually-hidden"
-             type="radio"
-             name="answer"
-             value={`artist-${id + 1}`}
-             id={`answer-${id}`}
-             onChange={(evt: ChangeEvent<HTMLInputElement>) => {
-               evt.preventDefault();
-               onAnswer(artist);
-             }}
-      />
-      <label className="artist__name" htmlFor="answer-2">
-        <img className="artist__picture" src={picture} alt={artist}/>
-        {artist}
-      </label>
-    </div>)
-}
 
 
 export default ArtistQuestionScreen

@@ -1,3 +1,5 @@
+import {Questions} from "../types/questions";
+
 const AVATAR_URL = 'https://i.pravatar.cc/128';
 
 export const questions: Questions = [
@@ -28,39 +30,32 @@ export const questions: Questions = [
       artist: 'John Snow',
     }, {
       picture: `${AVATAR_URL}?rnd=${Math.random()}`,
+      artist: 'Jim Beam',
+    }, {
+      picture: `${AVATAR_URL}?rnd=${Math.random()}`,
       artist: 'Jack Daniels',
+    },
+    ],
+  },
+
+  {
+    type: 'artist',
+    song: {
+      artist: 'Jim Beam',
+      src: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/CantiqueDeJeanRacine.ogg',
+    },
+    answers: [{
+      picture: `${AVATAR_URL}?rnd=${Math.random()}`,
+      artist: 'John Snow',
     }, {
       picture: `${AVATAR_URL}?rnd=${Math.random()}`,
       artist: 'Jim Beam',
-    }],
+    }, {
+      picture: `${AVATAR_URL}?rnd=${Math.random()}`,
+      artist: 'Jack Daniels',
+    },
+    ],
   },
+
 ];
 
-export type Questions = (QuestionGenre|QuestionArtist)[]
-
-export type QuestionGenre = {
-  type: string,
-  genre: string,
-  answers: GenreAnswerType[]
-}
-
-type GenreAnswerType = {
-  src: string,
-  genre: string
-}
-
-type ArtistAnswerType = {
-  picture: string,
-  artist: string
-
-}
-
-export type QuestionArtist = {
-  type: string,
-  song: {
-    artist: string,
-    src: string,
-  },
-  answers: ArtistAnswerType[]
-
-}

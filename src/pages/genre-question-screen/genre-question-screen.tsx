@@ -1,11 +1,12 @@
 import {Link} from "react-router-dom";
-import {QuestionGenre} from "../../mocks/question";
-import {ChangeEventHandler, MouseEventHandler, useState} from "react";
+import {ChangeEventHandler, useState} from "react";
 import AudioPlayer from "../../components/audio-player/audio-player";
+import {QuestionGenre} from "../../types/questions";
+import Mistakes from "../../components/Mistakes";
 
 type GenreQuestionScreenProps = {
   question: QuestionGenre,
-  onAnswer: (arg: string) => void
+  onAnswer: (question: QuestionGenre, response: boolean[]) => void
 }
 
 function GenreQuestionScreen({question, onAnswer}: GenreQuestionScreenProps): JSX.Element {
@@ -36,11 +37,7 @@ function GenreQuestionScreen({question, onAnswer}: GenreQuestionScreenProps): JS
                     }
           />
         </svg>
-        <div className="game__mistakes">
-          <div className="wrong"></div>
-          <div className="wrong"></div>
-          <div className="wrong"></div>
-        </div>
+        <Mistakes/>
       </header>
 
       <section className="game__screen">
@@ -58,7 +55,7 @@ function GenreQuestionScreen({question, onAnswer}: GenreQuestionScreenProps): JS
             />))
           }
           <button className="game__submit button" type="submit" onClick={() => {
-            onAnswer('haha')
+            onAnswer(question, userAnswers)  // как узнать че выбрали то?
           }}>Ответить
           </button>
         </form>
