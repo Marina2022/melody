@@ -1,4 +1,4 @@
-export type Questions = (QuestionGenre | QuestionArtist)[]
+export type Question = (QuestionGenre | QuestionArtist)
 type GenreAnswerType = {
   src: string,
   genre: string

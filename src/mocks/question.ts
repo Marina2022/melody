@@ -1,8 +1,8 @@
-import {Questions} from "../types/questions";
+import {Question} from "../types/questions";
 
 const AVATAR_URL = 'https://i.pravatar.cc/128';
 
-export const questions: Questions = [
+export const questions: Question[] = [
   {
     type: 'genre',
     genre: 'rock',

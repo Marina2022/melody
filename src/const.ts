@@ -7,8 +7,10 @@ export enum AppRoute {
 
 }
 
-export enum AuthorizationStatus {
+export enum AuthStatus {
   Auth = 'AUTH',
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN',
 }
+
+export const MAX_MISTAKES = 20
