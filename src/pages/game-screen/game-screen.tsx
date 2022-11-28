@@ -28,7 +28,7 @@ function GameScreen(): JSX.Element {
 
   let question = questions[step];
   if (mistakes >= MAX_MISTAKES) return <Navigate to={AppRoute.Lose}/>
-  if ((step + 1) > 3) return <Navigate to={AppRoute.Result}/>
+  if ((step + 1) > questions.length) return <Navigate to={AppRoute.Result}/>
 
   if (!isLoading && !error && questions.length > 0) {
     switch (question.type) {
