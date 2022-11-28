@@ -1,22 +1,16 @@
-import {createReducer, current} from "@reduxjs/toolkit";
-import {
-  checkAnswer,
-
-  incrementStep,
-  questionLoaded,
-  resetGame,
-  setAuthStatus,
-  tokenReceived
-} from "./actions";
+import {createReducer} from "@reduxjs/toolkit";
+import {checkAnswer, incrementStep, questionLoaded, resetGame, setAuthStatus, setError, setLoading,} from "./actions";
 import {isResponseCorrect} from "../gameUtils";
 import {AuthStatus} from "../const";
-import {QuestionArtist, QuestionGenre} from "../types/questions";
+import {Question} from "../types/questions";
 
 const initialState = {
+  isLoading: true,
   mistakes: 0,
   step: 0,
   isAuthorized: AuthStatus.Unknown as string,
-  questions: [{},{}] as (QuestionArtist | QuestionGenre)[]
+  questions: [] as Question[],
+  error: null as string | null
 }
 
 const gameReducer = createReducer(initialState, (builder)=>{
@@ -38,6 +32,13 @@ const gameReducer = createReducer(initialState, (builder)=>{
 
     .addCase(setAuthStatus, (state, action)=>{
       state.isAuthorized = action.payload
+    })
+    .addCase(setLoading, (state, action)=>{
+      state.isLoading = action.payload
+    })
+
+    .addCase(setError, (state, action)=>{
+      state.error = action.payload
     })
 
 

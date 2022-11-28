@@ -1,9 +1,9 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {AxiosInstance} from "axios";
 import {AppDispatch, GlobalState} from "../types/store";
-import {questionLoaded, setAuthStatus, tokenReceived} from "./actions";
-import {setToken} from "../services/token";
-import {AppRoute, AuthStatus} from "../const";
+import {questionLoaded, setAuthStatus, setError, setLoading} from "./actions";
+import {dropToken, setToken} from "../services/token";
+import {AppRoute, AuthStatus, ERROR_SHOW_TIME} from "../const";
 
 
 export const fetchQuestions = createAsyncThunk<void, undefined, {
@@ -12,8 +12,18 @@ export const fetchQuestions = createAsyncThunk<void, undefined, {
   state: GlobalState
 }>('melody/getQuestions',
   async (_arg, {dispatch, extra}) => {
-    const {data} = await extra.get('/questions')
-    dispatch(questionLoaded(data))
+    try {
+      dispatch(setLoading(true))
+      const {data} = await extra.get('/questions')
+      dispatch(questionLoaded(data))
+    } catch (e) {
+      await dispatch(setError('Вопросы не подгрузились'))
+      dispatch({type: 'game/redirect', payload: '/'})
+      await dispatch(clearErrorAction())
+
+    }finally {
+      dispatch(setLoading(false))
+    }
   }
 )
 
@@ -30,11 +40,17 @@ export const sendLogin = createAsyncThunk<void, FormDataType, {
 }>('melody/sendLogin',
   async (arg, {dispatch, extra}) => {
     try {
+      dispatch(setLoading(true))
       const {data} = await extra.post(AppRoute.Login, arg)
       setToken(data.token)
-      dispatch(checkAuth())
+      await dispatch(checkAuth())
+      dispatch({type: 'game/redirect', payload: '/result'})
     } catch (e) {
-      console.log('чета не качнулсо токен')
+      await dispatch(setError('Неправильный логин или пароль'))
+      dispatch({type: 'game/redirect', payload: '/result'})
+      await dispatch(clearErrorAction())
+    } finally {
+      dispatch(setLoading(false))
     }
   }
 )
@@ -46,10 +62,39 @@ export const checkAuth = createAsyncThunk<void, undefined,
     state: GlobalState
   }>('user/checkAuth', async (_arg, {dispatch, extra}) => {
   try {
+    dispatch(setLoading(true))
     const data = await extra.get(AppRoute.Login)
-    dispatch(setAuthStatus(AuthStatus.Auth))
+    if (data.status === 200) dispatch(setAuthStatus(AuthStatus.Auth))
   } catch (e) {
     dispatch(setAuthStatus(AuthStatus.NoAuth))
+  } finally {
+    dispatch(setLoading(false))
   }
+})
 
+export const logout = createAsyncThunk<void, undefined,
+  {
+    extra: AxiosInstance,
+    dispatch: AppDispatch,
+    state: GlobalState
+  }>
+('user/logout', async (_arg, {dispatch, extra}) => {
+  await extra.delete('/logout');
+  await dropToken()
+  await dispatch(checkAuth)
+  dispatch({type: 'game/redirect', payload: '/login'})
+})
+
+
+export const clearErrorAction = createAsyncThunk< void, undefined,
+{
+  extra: AxiosInstance,
+  dispatch: AppDispatch,
+  state: GlobalState
+}
+>
+('game/clearError', async (_arg, {dispatch, extra}) => {
+  setTimeout(()=>{
+    dispatch(setError(null))
+  }, ERROR_SHOW_TIME)
 })

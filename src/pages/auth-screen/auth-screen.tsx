@@ -1,11 +1,13 @@
 import {FormEvent, LegacyRef, MutableRefObject, useRef} from "react";
-import {useAppDispatch} from "../../hooks";
+import {useAppDispatch, useAppSelector} from "../../hooks";
 import {sendLogin} from "../../store/api-actions";
 
 function AuthScreen(): JSX.Element {
   const dispatch = useAppDispatch()
   const loginInp = useRef<HTMLInputElement | null>(null)
   const passInp = useRef<HTMLInputElement | null>(null)
+
+  const isLoading = useAppSelector(state => state.isLoading)
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (loginInp.current && passInp.current) {
@@ -14,11 +16,10 @@ function AuthScreen(): JSX.Element {
         password: passInp.current.value
       }
       dispatch(sendLogin(formData)) // Oliver.conner@gmail.com    12345678
-
     }
-
   }
-  return (
+
+    return (
     <section className="login">
       <div className="login__logo"><img src="/img/melody-logo.png" alt="Угадай мелодию" width="186" height="83"/></div>
       <h2 className="login__title">Вы настоящий меломан!</h2>
@@ -33,7 +34,8 @@ function AuthScreen(): JSX.Element {
           <input className="login__input" type="text" name="password" id="password" ref={passInp}/>
           <span className="login__error">Неверный пароль</span>
         </p>
-        <button className="login__button button" type="submit">Войти</button>
+        <button className="login__button button" type="submit" disabled={isLoading}>Войти</button>
+
       </form>
       <button className="replay" type="button">Сыграть ещё раз</button>
     </section>

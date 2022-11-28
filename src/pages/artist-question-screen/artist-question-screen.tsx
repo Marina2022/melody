@@ -3,6 +3,7 @@ import {ChangeEvent, useState} from "react";
 import AudioPlayer from "../../components/audio-player/audio-player";
 import {QuestionArtist} from "../../types/questions";
 import Mistakes from "../../components/Mistakes";
+import {nanoid} from "@reduxjs/toolkit";
 
 type ArtistQuestionScreenProps = {
   question: QuestionArtist,
@@ -42,7 +43,7 @@ function ArtistQuestionScreen({question, onAnswer}: ArtistQuestionScreenProps): 
         </div>
         <form className="game__artist">
           {question.answers.map((answer, index) =>(
-            <div className="artist" key={answer.artist}>
+            <div className="artist" key={nanoid()}>
               <input className="artist__input visually-hidden"
                      type="radio"
                      name="answer"

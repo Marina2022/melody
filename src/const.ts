@@ -13,4 +13,6 @@ export enum AuthStatus {
   Unknown = 'UNKNOWN',
 }
 
-export const MAX_MISTAKES = 20
+export const MAX_MISTAKES = 10
+
+export const ERROR_SHOW_TIME = 1000

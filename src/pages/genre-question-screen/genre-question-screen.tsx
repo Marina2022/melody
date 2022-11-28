@@ -42,7 +42,10 @@ function GenreQuestionScreen({question, onAnswer}: GenreQuestionScreenProps): JS
 
       <section className="game__screen">
         <h2 className="game__title">Выберите инди-рок треки</h2>
-        <form className="game__tracks">
+        <form className="game__tracks" onSubmit={(e) => {
+          e.preventDefault()
+          onAnswer(question, userAnswers)
+        }}>
 
           {question.answers.map((answer, id) =>
             (<GenreAnswer
@@ -54,9 +57,7 @@ function GenreQuestionScreen({question, onAnswer}: GenreQuestionScreenProps): JS
               setIdPlaying={setIdPlaying}
             />))
           }
-          <button className="game__submit button" type="submit" onClick={() => {
-            onAnswer(question, userAnswers)  // как узнать че выбрали то?
-          }}>Ответить
+          <button className="game__submit button" type="submit" >Ответить
           </button>
         </form>
       </section>

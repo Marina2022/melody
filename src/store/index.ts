@@ -1,8 +1,7 @@
 import {configureStore} from "@reduxjs/toolkit";
 import gameReducer from "./reducer";
 import {createAPI} from "../services/api";
-import {fetchQuestions} from "./api-actions";
-import {useAppDispatch} from "../hooks";
+import {redirectToRoute} from "../middlewares/historyMiddleware";
 
 const api = createAPI()
 
@@ -12,7 +11,7 @@ export const store = configureStore({
     thunk:  {
       extraArgument: api
     }
-  })
+  }).concat(redirectToRoute)
 })
 
 
